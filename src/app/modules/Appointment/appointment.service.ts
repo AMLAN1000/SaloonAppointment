@@ -186,9 +186,20 @@ const getStylistAppointments = async (stylistId: string, filters: any) => {
   }
 
   if (date) {
-    const slotDate = new Date(date);
+    // FIX: Create date range for the entire day
+    const startDate = new Date(date);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999);
+
     whereConditions.timeSlot = {
-      date: slotDate,
+      is: {
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
     };
   }
 
@@ -233,9 +244,20 @@ const getAllAppointments = async (filters: any) => {
   }
 
   if (date) {
-    const slotDate = new Date(date);
+    // FIX: Create date range for the entire day
+    const startDate = new Date(date);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999);
+
     whereConditions.timeSlot = {
-      date: slotDate,
+      is: {
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
     };
   }
 
@@ -272,7 +294,6 @@ const getAllAppointments = async (filters: any) => {
 
   return appointments;
 };
-
 const getAppointmentById = async (id: string) => {
   const appointment = await prisma.appointment.findUnique({
     where: { id },

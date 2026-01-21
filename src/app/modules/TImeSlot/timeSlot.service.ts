@@ -167,8 +167,17 @@ const getAllTimeSlots = async (filters: any) => {
   }
 
   if (date) {
-    const slotDate = new Date(date);
-    whereConditions.date = slotDate;
+    // FIX: Create date range for the entire day
+    const startDate = new Date(date);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999);
+
+    whereConditions.date = {
+      gte: startDate,
+      lte: endDate,
+    };
   }
 
   if (isBooked !== undefined) {
@@ -208,12 +217,20 @@ const getAllTimeSlots = async (filters: any) => {
 };
 
 const getAvailableSlots = async (stylistId: string, date: string) => {
-  const slotDate = new Date(date);
+  // FIX: Create date range for the entire day
+  const startDate = new Date(date);
+  startDate.setHours(0, 0, 0, 0);
+
+  const endDate = new Date(date);
+  endDate.setHours(23, 59, 59, 999);
 
   const availableSlots = await prisma.timeSlot.findMany({
     where: {
       stylistId,
-      date: slotDate,
+      date: {
+        gte: startDate,
+        lte: endDate,
+      },
       isBooked: false,
     },
     include: {
@@ -235,7 +252,6 @@ const getAvailableSlots = async (stylistId: string, date: string) => {
 
   return availableSlots;
 };
-
 const deleteTimeSlot = async (id: string) => {
   const timeSlot = await prisma.timeSlot.findUnique({
     where: { id },
