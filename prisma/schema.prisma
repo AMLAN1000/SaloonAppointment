@@ -1,0 +1,160 @@
+// This is your Prisma schema file for MongoDB
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  STYLIST
+  CUSTOMER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+  SUSPENDED
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+// User Model - Handles all three roles
+model User {
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  fullName       String
+  email          String     @unique
+  password       String
+  phoneNumber    String?
+  role           UserRole   @default(CUSTOMER)
+  status         UserStatus @default(ACTIVE)
+  emailVerified  Boolean    @default(false)
+  isDeleted      Boolean    @default(false)
+  profileImage   String?
+  lastLoginAt    DateTime?
+  suspendedUntil DateTime?
+
+  // Relations
+  stylistProfile Stylist?      @relation("UserToStylist")
+  appointments   Appointment[] @relation("CustomerAppointments")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// Stylist Model - Extended profile for stylists
+model Stylist {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @unique @db.ObjectId
+  user   User   @relation("UserToStylist", fields: [userId], references: [id], onDelete: Cascade)
+
+  bio            String?
+  specialization String[] // e.g., ["Haircut", "Coloring", "Styling"]
+  experience     Int? // years of experience
+  rating         Float    @default(0.0)
+  isAvailable    Boolean  @default(true)
+
+  // Relations
+  timeSlots    TimeSlot[]
+  appointments Appointment[] @relation("StylistAppointments")
+  services     Service[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("stylists")
+}
+
+// Service Category Model
+model Service {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String // e.g., "Haircut", "Facial", "Manicure"
+  description String?
+  duration    Int     @default(60) // duration in minutes (always 60)
+  price       Float
+  image       String?
+  isActive    Boolean @default(true)
+
+  // Relations
+  stylistId    String        @db.ObjectId
+  stylist      Stylist       @relation(fields: [stylistId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("services")
+}
+
+// Time Slot Model - Admin creates these (max 8 per day per stylist)
+model TimeSlot {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  stylistId String  @db.ObjectId
+  stylist   Stylist @relation(fields: [stylistId], references: [id], onDelete: Cascade)
+
+  date      DateTime // Date of the slot (YYYY-MM-DD)
+  startTime String // e.g., "09:00"
+  endTime   String // e.g., "10:00"
+  isBooked  Boolean  @default(false)
+
+  // Relations
+  appointment Appointment?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([stylistId, date, startTime]) // Prevent duplicate slots
+  @@map("time_slots")
+}
+
+// Appointment Model - Customer bookings
+model Appointment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  customerId String @db.ObjectId
+  customer   User   @relation("CustomerAppointments", fields: [customerId], references: [id], onDelete: Cascade)
+
+  stylistId String  @db.ObjectId
+  stylist   Stylist @relation("StylistAppointments", fields: [stylistId], references: [id], onDelete: Cascade)
+
+  serviceId String  @db.ObjectId
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  timeSlotId String   @unique @db.ObjectId
+  timeSlot   TimeSlot @relation(fields: [timeSlotId], references: [id], onDelete: Cascade)
+
+  status             AppointmentStatus @default(PENDING)
+  notes              String? // Customer notes/requests
+  cancellationReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("appointments")
+}
+
+// Notification Model (optional but useful)
+model Notification {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String  @db.ObjectId
+  title   String
+  message String
+  type    String // "appointment", "cancellation", "reminder"
+  isRead  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notifications")
+}
