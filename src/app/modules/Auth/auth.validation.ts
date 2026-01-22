@@ -31,8 +31,16 @@ const loginValidation = z.object({
     }),
   }),
 });
+const updateProfileValidation = z.object({
+  body: z.object({
+    fullName: z.string().optional(),
+    phoneNumber: z.string().optional(),
+    profileImage: z.string().optional(),
+  }),
+});
 
 export const AuthValidation = {
   registerValidation,
   loginValidation,
+  updateProfileValidation
 };

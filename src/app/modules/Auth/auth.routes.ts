@@ -27,4 +27,11 @@ router.get(
   AuthController.getMyProfile,
 );
 
+router.patch(
+  "/me",
+  auth(UserRole.CUSTOMER, UserRole.STYLIST, UserRole.ADMIN),
+  validateRequest(AuthValidation.updateProfileValidation),
+  AuthController.updateMyProfile,
+);
+
 export const AuthRoutes = router;
