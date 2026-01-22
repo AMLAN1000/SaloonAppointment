@@ -4,7 +4,7 @@ import * as bcrypt from "bcrypt";
 import config from "../../../config";
 import ApiError from "../../../errors/ApiErrors";
 import httpStatus from "http-status";
-import { jwtHelpers } from "../../../helpars/jwtHelpers";
+import { jwtHelpers } from "../../../helpers/jwtHelpers";
 import { Secret } from "jsonwebtoken";
 
 const register = async (payload: any) => {
