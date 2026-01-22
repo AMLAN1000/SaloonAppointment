@@ -59,10 +59,10 @@ The **Salon Appointment & Service Management System** is a robust backend API de
 
 | Category | Technology |
 |----------|-----------|
-| **Language** | TypeScript 5.x |
-| **Framework** | Express.js 4.x |
-| **Database** | MongoDB 6.x |
-| **ORM** | Prisma 6.x |
+| **Language** | TypeScript |
+| **Framework** | Express.js |
+| **Database** | MongoDB |
+| **ORM** | Prisma  |
 | **Authentication** | JSON Web Tokens (JWT) |
 | **Validation** | Zod |
 | **Password Hashing** | Bcrypt |
@@ -134,10 +134,7 @@ PORT=5050
 # JWT Configuration
 JWT_SECRET=your-super-secret-jwt-key-here-change-this
 EXPIRES_IN=90d
-REFRESH_TOKEN_SECRET=your-refresh-token-secret-here
-REFRESH_TOKEN_EXPIRES_IN=30d
-RESET_PASS_TOKEN=your-reset-password-token-secret
-RESET_PASS_TOKEN_EXPIRES_IN=5m
+
 
 # Security
 BCRYPT_SALT_ROUNDS=12
@@ -501,7 +498,41 @@ Authorization: Bearer <admin-token>
 **Valid Statuses:** `PENDING`, `CONFIRMED`, `COMPLETED`, `CANCELLED`
 
 ---
+## 📋 API Endpoints Overview
 
+| Method | Endpoint | Role | Description |
+|--------|----------|------|-------------|
+| **Authentication** |
+| POST | `/auth/register` | Public | Register new customer |
+| POST | `/auth/login` | Public |  User login (Admin/Stylist/Customer) |
+| GET | `/auth/me` | All | Get current user profile |
+| **Stylists** |
+| POST | `/stylists` | Admin | Create new stylist |
+| GET | `/stylists` | All | Get all stylists |
+| GET | `/stylists/:id` | All | Get stylist by ID |
+| PATCH | `/stylists/:id` | Admin | Update stylist profile |
+| DELETE | `/stylists/:id` | Admin | Delete stylist |
+| **Services** |
+| POST | `/services` | Admin | Create new service |
+| GET | `/services` | All | Get all services |
+| GET | `/services/:id` | All | Get service by ID |
+| PATCH | `/services/:id` | Admin |  Update service |
+| DELETE | `/services/:id` | Admin |  Delete service |
+| **Time Slots** |
+| POST | `/time-slots` | Admin |  Create single time slot |
+| POST | `/time-slots/bulk` | Admin |  Create multiple slots (max 8/day) |
+| GET | `/time-slots` | All |  Get all time slots |
+| GET | `/time-slots/available` | All |  Get available slots |
+| DELETE | `/time-slots/:id` | Admin |  Delete time slot |
+| **Appointments** |
+| POST | `/appointments` | Customer |  Book appointment |
+| GET | `/appointments/my-appointments` | Customer |  View own appointments |
+| GET | `/appointments/stylist/:stylistId` | Stylist/Admin |  Get stylist's appointments |
+| GET | `/appointments` | Admin |  Get all appointments |
+| GET | `/appointments/:id` | All |  Get appointment by ID |
+| PATCH | `/appointments/:id/cancel` | Customer |  Cancel appointment (2hr notice) |
+| PATCH | `/appointments/:id/status` | Admin |  Update appointment status |
+---
 ## Testing Guide
 
 Follow this step-by-step guide to test the complete booking flow:
@@ -513,7 +544,7 @@ curl -X POST https://saloonappointment-production.up.railway.app/api/v1/auth/log
   -H "Content-Type: application/json" \
   -d '{
     "email": "admin@salon.com",
-    "password": "admin123"
+    "password": "Admin123"
   }'
 ```
 
@@ -717,7 +748,7 @@ Password: Admin123
 
 **Health Check:** [https://saloonappointment-production.up.railway.app](https://saloonappointment-production.up.railway.app)
 
-**Status:** ✅ Live and Running
+**Status:**  Live and Running
 
 ---
 
@@ -768,7 +799,7 @@ salon-management-system/
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
 ### Railway (Current Deployment)
 
