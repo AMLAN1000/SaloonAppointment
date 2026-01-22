@@ -1,24 +1,29 @@
 {
-  "name": "best-one",
+  "name": "salon-management-api",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "dist/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node ./dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "generate": "ts-node src/generate-module.js",
     "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["salon", "appointment", "api", "management"],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Salon Appointment and Service Management System API",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^1.4.11",
     "@types/node": "^20.14.11",
@@ -27,16 +32,13 @@
     "@types/paypal-rest-sdk": "^1.7.9",
     "@types/streamifier": "^0.1.2",
     "@types/uuid": "^10.0.0",
-    "prisma": "^6.19.0",
+    "@types/ws": "^8.18.1",
     "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.5.3"
+    "ts-node-dev": "^2.0.0"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.717.0",
     "@prisma/client": "^6.19.0",
-    "@types/jsonwebtoken": "^9.0.6",
-    "@types/ws": "^8.18.1",
     "aws": "^0.0.3-2",
     "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
@@ -57,9 +59,11 @@
     "nodemailer": "^6.9.14",
     "nodemon": "^3.1.4",
     "paypal-rest-sdk": "^1.8.1",
+    "prisma": "^6.19.0",
     "socket.io": "^4.7.5",
     "streamifier": "^0.1.1",
     "stripe": "^16.8.0",
+    "typescript": "^5.5.3",
     "ws": "^8.18.3",
     "zod": "^3.23.8"
   }

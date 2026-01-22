@@ -5,14 +5,14 @@ import prisma from "../../shared/prisma";
 export const checkUserActivity = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const user = req.user; // assuming you have `req.user` from JWT middleware
 
-  if (!user?.id) return next();
+  if (!user?.userId) return next();
 
   const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
+    where: { id: user.userId },
     select: {
       lastLoginAt: true,
       status: true,
@@ -29,7 +29,7 @@ export const checkUserActivity = async (
   // If more than 10 days inactive, mark as INACTIVE
   if (daysSinceLogin > 10 && dbUser.status === UserStatus.ACTIVE) {
     await prisma.user.update({
-      where: { id: user.id },
+      where: { id: user.userId },
       data: { status: UserStatus.INACTIVE },
     });
   }
