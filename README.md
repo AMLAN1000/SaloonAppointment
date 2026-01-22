@@ -238,7 +238,7 @@ POST /auth/login
 ```json
 {
   "email": "admin@salon.com",
-  "password": "admin123"
+  "password": "Admin123"
 }
 ```
 
