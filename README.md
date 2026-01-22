@@ -1,4 +1,4 @@
-# 💇‍♀️ Salon Appointment & Service Management System
+#  Salon Appointment & Service Management System
 
 <div align="center">
 
@@ -11,13 +11,13 @@
 
 **A comprehensive backend system for managing salon appointments, stylists, services, and time slots with role-based access control.**
 
-[🚀 Live Demo](#-live-api) · [📖 Documentation](#-api-documentation) · [🐛 Report Bug](../../issues) · [✨ Request Feature](../../issues)
+[Live Demo](#-live-api) · [Documentation](#-api-documentation) 
 
 </div>
 
 ---
 
-## 🎯 Overview
+## Overview
 
 The **Salon Appointment & Service Management System** is a robust backend API designed to streamline salon operations. Built with **TypeScript**, **Express.js**, and **MongoDB**, it provides a complete solution for managing appointments, stylists, services, and customer bookings with enforced business rules and comprehensive error handling.
 
@@ -73,7 +73,7 @@ The **Salon Appointment & Service Management System** is a robust backend API de
 
 ##  Entity Relationship Diagram
 
-![ERD Diagram](./ERD.png)
+![ERD Diagram](ERD.png)
 
 ### Database Models
 
@@ -109,8 +109,8 @@ Before you begin, ensure you have the following installed:
 1. **Clone the repository**
 
 
-git clone https://github.com/yourusername/salon-management-system.git
-cd salon-management-system
+git clone https://github.com/AMLAN1000/SaloonAppointment.git
+cd SaloonAppointment
 
 
 2. **Install dependencies**
@@ -142,8 +142,7 @@ RESET_PASS_TOKEN_EXPIRES_IN=5m
 # Security
 BCRYPT_SALT_ROUNDS=12
 
-# Optional
-RESET_PASS_LINK=http://localhost:3000/reset-password
+
 ```
 
 4. **Generate Prisma Client**
@@ -170,11 +169,11 @@ The server will start at `http://localhost:5050`
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `DATABASE_URL` | MongoDB connection string | ✅ Yes |
-| `JWT_SECRET` | Secret key for JWT signing | ✅ Yes |
-| `BCRYPT_SALT_ROUNDS` | Rounds for password hashing | ✅ Yes |
-| `PORT` | Server port number | ❌ No (default: 5050) |
-| `NODE_ENV` | Environment mode | ❌ No (default: development) |
+| `DATABASE_URL` | MongoDB connection string |  Yes |
+| `JWT_SECRET` | Secret key for JWT signing | Yes |
+| `BCRYPT_SALT_ROUNDS` | Rounds for password hashing |  Yes |
+| `PORT` | Server port number |  No (default: 5050) |
+| `NODE_ENV` | Environment mode |  No (default: development) |
 
 ---
 
@@ -183,7 +182,7 @@ The server will start at `http://localhost:5050`
 ### Base URL
 
 **Local**: `http://localhost:5050/api/v1`  
-**Production**: `https://saloonappointment-production.up.railway.app/api/v1`
+**Production**: `https://saloonappointment-production.up.railway.app/`
 
 ### Authentication
 
@@ -251,7 +250,7 @@ Authorization: Bearer <token>
 
 ---
 
-### 👥 Stylist Endpoints
+### Stylist Endpoints
 
 #### Create Stylist (Admin Only)
 ```http
@@ -298,7 +297,7 @@ Authorization: Bearer <admin-token>
 
 ---
 
-### 💼 Service Endpoints
+### Service Endpoints
 
 #### Create Service (Admin Only)
 ```http
@@ -342,7 +341,7 @@ Authorization: Bearer <admin-token>
 
 ---
 
-### ⏰ Time Slot Endpoints
+### Time Slot Endpoints
 
 #### Create Single Slot (Admin Only)
 ```http
@@ -398,7 +397,7 @@ Authorization: Bearer <admin-token>
 
 ---
 
-### 📅 Appointment Endpoints
+### Appointment Endpoints
 
 #### Book Appointment (Customer Only)
 ```http
@@ -503,7 +502,7 @@ Authorization: Bearer <admin-token>
 
 ---
 
-## 🧪 Testing Guide
+## Testing Guide
 
 Follow this step-by-step guide to test the complete booking flow:
 
@@ -518,7 +517,7 @@ curl -X POST https://saloonappointment-production.up.railway.app/api/v1/auth/log
   }'
 ```
 
-**📋 Save the `accessToken` from the response**
+**Save the `accessToken` from the response**
 
 ### Step 2: Create a Stylist (Admin)
 
@@ -537,7 +536,7 @@ curl -X POST https://saloonappointment-production.up.railway.app/api/v1/stylists
   }'
 ```
 
-**📋 Save the stylist `id`**
+**Save the stylist `id`**
 
 ### Step 3: Create a Service (Admin)
 
@@ -553,7 +552,7 @@ curl -X POST https://saloonappointment-production.up.railway.app/api/v1/services
   }'
 ```
 
-**📋 Save the service `id`**
+**Save the service `id`**
 
 ### Step 4: Create Time Slots (Admin)
 
@@ -572,7 +571,7 @@ curl -X POST https://saloonappointment-production.up.railway.app/api/v1/time-slo
   }'
 ```
 
-**📋 Save a `timeSlotId`**
+**Save a `timeSlotId`**
 
 ### Step 5: Register as Customer
 
@@ -587,7 +586,7 @@ curl -X POST https://saloonappointment-production.up.railway.app/api/v1/auth/reg
   }'
 ```
 
-**📋 Save the customer `accessToken`**
+**Save the customer `accessToken`**
 
 ### Step 6: Browse Services
 
@@ -635,20 +634,20 @@ curl -X PATCH https://saloonappointment-production.up.railway.app/api/v1/appoint
 
 ---
 
-## 📜 Business Rules
+## Business Rules
 
 ### Appointment Scheduling
-- ✅ Maximum **8 slots per stylist per day**
-- ✅ Each slot lasts exactly **1 hour**
-- ✅ **1:1 ratio** enforced (1 customer per stylist per slot)
-- ✅ Once booked, slot becomes **unavailable**
-- ✅ Admin manages the master schedule
+- Maximum **8 slots per stylist per day**
+- Each slot lasts exactly **1 hour**
+- **1:1 ratio** enforced (1 customer per stylist per slot)
+- Once booked, slot becomes **unavailable**
+- Admin manages the master schedule
 
 ### Booking System
-- ✅ Customers can only book **available slots**
-- ✅ Cannot book **two stylists** in the same time slot
-- ✅ Cancellation requires **at least 2 hours** notice
-- ✅ Automatic slot validation and conflict prevention
+- Customers can only book **available slots**
+- Cannot book **two stylists** in the same time slot
+- Cancellation requires **at least 2 hours** notice
+- Automatic slot validation and conflict prevention
 
 ### Error Handling
 
@@ -698,16 +697,15 @@ curl -X PATCH https://saloonappointment-production.up.railway.app/api/v1/appoint
 
 ---
 
-## 🔑 Admin Credentials
+## Admin Credentials
 
 For testing and demonstration purposes:
 
 ```
 Email: admin@salon.com
-Password: admin123
+Password: Admin123
 ```
 
-> ⚠️ **Important:** Change these credentials in production!
 
 ---
 
@@ -782,73 +780,6 @@ The application is currently deployed on [Railway](https://railway.app).
 3. Railway auto-detects Node.js and builds automatically
 4. Access via provided Railway domain
 
-### Other Platforms
-
-<details>
-<summary><b>Vercel Deployment</b></summary>
-
-```bash
-npm i -g vercel
-vercel login
-vercel --prod
-```
-</details>
-
-<details>
-<summary><b>Render Deployment</b></summary>
-
-1. Connect GitHub repository
-2. Set build command: `npm run build`
-3. Set start command: `npm start`
-4. Add environment variables
-5. Deploy
-</details>
-
 ---
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👨‍💻 Author
-
-**Your Name**
-
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
-
----
-
-## 🙏 Acknowledgments
-
-- [Express.js](https://expressjs.com/) - Fast, unopinionated web framework
-- [Prisma](https://www.prisma.io/) - Next-generation ORM
-- [MongoDB](https://www.mongodb.com/) - NoSQL database
-- [Railway](https://railway.app/) - Deployment platform
-
----
-
-<div align="center">
-
-**⭐ Star this repository if you find it helpful!**
-
-Made with ❤️ and TypeScript
-
-[⬆ Back to Top](#-salon-appointment--service-management-system)
 
 </div>
