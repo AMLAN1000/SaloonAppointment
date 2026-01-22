@@ -4,10 +4,7 @@ node_modules
 .env.production
 *.log
 .DS_Store
-src
-tsconfig.json
 .gitignore
-README.md
 .git
 .vscode
 .idea
