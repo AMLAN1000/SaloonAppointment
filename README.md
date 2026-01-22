@@ -1,842 +1,854 @@
-# \# Salon Appointment and Service Management System
+# 💇‍♀️ Salon Appointment & Service Management System
 
-# 
+<div align="center">
 
-# \## Project Overview
+![Node.js](https://img.shields.io/badge/Node.js-18.x-green?style=for-the-badge&logo=node.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)
+![Express](https://img.shields.io/badge/Express.js-4.x-lightgrey?style=for-the-badge&logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-6.x-green?style=for-the-badge&logo=mongodb)
+![Prisma](https://img.shields.io/badge/Prisma-6.x-2D3748?style=for-the-badge&logo=prisma)
+![JWT](https://img.shields.io/badge/JWT-Auth-red?style=for-the-badge&logo=jsonwebtokens)
 
-# A comprehensive salon management system designed to streamline beauty and hair salon operations. The system handles appointment scheduling, service management, and stylist coordination with role-based access control for Admins, Stylists, and Customers.
+**A comprehensive backend system for managing salon appointments, stylists, services, and time slots with role-based access control.**
 
-# 
+[🚀 Live Demo](#-live-api) · [📖 Documentation](#-api-documentation) · [🐛 Report Bug](../../issues) · [✨ Request Feature](../../issues)
 
-# \## Technology Stack
+</div>
 
-# \- \*\*Programming Language\*\*: TypeScript
+---
 
-# \- \*\*Web Framework\*\*: Express.js
+## 🎯 Overview
 
-# \- \*\*ORM\*\*: Prisma
+The **Salon Appointment & Service Management System** is a robust backend API designed to streamline salon operations. Built with **TypeScript**, **Express.js**, and **MongoDB**, it provides a complete solution for managing appointments, stylists, services, and customer bookings with enforced business rules and comprehensive error handling.
 
-# \- \*\*Database\*\*: MongoDB
+### Key Highlights
 
-# \- \*\*Authentication\*\*: JWT (JSON Web Tokens)
+- **Role-Based Access Control**: Admin, Stylist, and Customer roles with specific permissions
+- **Smart Scheduling**: Prevents double bookings and enforces time slot limits
+- **Business Logic**: 8 slots/day limit, 2-hour cancellation policy, 1:1 booking ratio
+- **Secure Authentication**: JWT-based auth with bcrypt password hashing
+- **Type Safety**: Full TypeScript implementation with Prisma ORM
+- **Modular Architecture**: Clean, maintainable, and scalable codebase
 
-# \- \*\*Architecture\*\*: Modular Pattern
+---
 
-# 
+## Features
 
-# \## Entity Relationship Diagram (ERD)
+###  Admin Features
+- Create and manage stylist profiles
+- Define service categories and pricing
+- Schedule time slots (max 8 per stylist per day)
+- View all appointments and manage statuses
+- Full control over system configuration
 
-# 
+### Stylist Features
+- View assigned appointments
+- Check daily schedule
+- Access customer booking information
 
-# ```
+### Customer Features
+- Self-registration and profile management
+- Browse available services and stylists
+- Book appointments with available time slots
+- View booking history
+- Cancel appointments (minimum 2 hours notice)
 
-# ┌─────────────┐         ┌──────────────┐         ┌─────────────┐
+---
 
-# │    User     │1      1 │   Stylist    │1      \* │  TimeSlot   │
+## Technology Stack
 
-# │─────────────│◄────────┤──────────────│◄────────┤─────────────│
+| Category | Technology |
+|----------|-----------|
+| **Language** | TypeScript 5.x |
+| **Framework** | Express.js 4.x |
+| **Database** | MongoDB 6.x |
+| **ORM** | Prisma 6.x |
+| **Authentication** | JSON Web Tokens (JWT) |
+| **Validation** | Zod |
+| **Password Hashing** | Bcrypt |
+| **Architecture** | Modular Pattern |
+| **Deployment** | Railway |
 
-# │ id          │         │ id           │         │ id          │
+---
 
-# │ fullName    │         │ userId (FK)  │         │ stylistId   │
+##  Entity Relationship Diagram
 
-# │ email       │         │ bio          │         │ date        │
+![ERD Diagram](./ERD.png)
 
-# │ password    │         │ special...   │         │ startTime   │
+### Database Models
 
-# │ phoneNumber │         │ experience   │         │ endTime     │
+- **User**: Manages all user roles (Admin, Stylist, Customer)
+- **Stylist**: Extended profile for stylists with specializations
+- **Service**: Service categories offered (Haircut, Facial, etc.)
+- **TimeSlot**: Available appointment slots (max 8/day per stylist)
+- **Appointment**: Customer bookings with status tracking
 
-# │ role        │         │ rating       │         │ isBooked    │
+### Relationships
 
-# │ status      │         │ isAvailable  │         └─────────────┘
+- `User ↔ Stylist`: One-to-One (when role is STYLIST)
+- `User ↔ Appointment`: One-to-Many (customers)
+- `Stylist ↔ Service`: One-to-Many
+- `Stylist ↔ TimeSlot`: One-to-Many
+- `TimeSlot ↔ Appointment`: One-to-One (prevents double booking)
 
-# │ ...         │         └──────────────┘               │1
+---
 
-# └─────────────┘                │1                      │
+##  Getting Started
 
-# &nbsp;     │1                       │                       │
+### Prerequisites
 
-# &nbsp;     │                        │                       │1
+Before you begin, ensure you have the following installed:
 
-# &nbsp;     │                        │\*                      │
+- **Node.js** (v18.x or higher) - [Download](https://nodejs.org/)
+- **npm** or **yarn** - Comes with Node.js
+- **MongoDB** - Local installation or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) account
+- **Git** - [Download](https://git-scm.com/)
 
-# &nbsp;     │\*                  ┌────▼───────┐         ┌────▼────────┐
+### Installation
 
-# &nbsp;     │                   │  Service   │         │ Appointment │
+1. **Clone the repository**
 
-# &nbsp;     └──────────────────►│────────────│         │─────────────│
 
-# &nbsp;                         │ id         │1      1►│ id          │
+git clone https://github.com/yourusername/salon-management-system.git
+cd salon-management-system
 
-# &nbsp;                         │ name       │◄────────┤ customerId  │
 
-# &nbsp;                         │ description│         │ stylistId   │
+2. **Install dependencies**
 
-# &nbsp;                         │ duration   │         │ serviceId   │
+```bash
+npm install
+```
 
-# &nbsp;                         │ price      │         │ timeSlotId  │
+3. **Set up environment variables**
 
-# &nbsp;                         │ stylistId  │         │ status      │
+Create a `.env` file in the root directory:
 
-# &nbsp;                         │ isActive   │         │ notes       │
+```env
+# Database
+DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/salon_db?retryWrites=true&w=majority"
 
-# &nbsp;                         └────────────┘         └─────────────┘
+# Server Configuration
+NODE_ENV=development
+PORT=5050
 
-# ```
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-here-change-this
+EXPIRES_IN=90d
+REFRESH_TOKEN_SECRET=your-refresh-token-secret-here
+REFRESH_TOKEN_EXPIRES_IN=30d
+RESET_PASS_TOKEN=your-reset-password-token-secret
+RESET_PASS_TOKEN_EXPIRES_IN=5m
 
-# 
+# Security
+BCRYPT_SALT_ROUNDS=12
 
-# \## Database Schema
+# Optional
+RESET_PASS_LINK=http://localhost:3000/reset-password
+```
 
-# 
+4. **Generate Prisma Client**
 
-# \### User Model
+```bash
+npx prisma generate
+```
 
-# \- Handles all three roles: ADMIN, STYLIST, CUSTOMER
+5. **Push database schema**
 
-# \- Fields: id, fullName, email, password, phoneNumber, role, status, emailVerified, isDeleted, profileImage, lastLoginAt, suspendedUntil
+```bash
+npx prisma db push
+```
 
-# 
+6. **Start the development server**
 
-# \### Stylist Model
+```bash
+npm run dev
+```
 
-# \- Extended profile for stylists
+The server will start at `http://localhost:5050`
 
-# \- Fields: id, userId, bio, specialization\[], experience, rating, isAvailable
+### Environment Variables
 
-# 
-
-# \### Service Model
-
-# \- Service categories (Haircut, Facial, etc.)
-
-# \- Fields: id, name, description, duration (60 min), price, stylistId, image, isActive
-
-# 
-
-# \### TimeSlot Model
-
-# \- Admin-created time slots (max 8 per day per stylist)
-
-# \- Fields: id, stylistId, date, startTime, endTime, isBooked
-
-# 
-
-# \### Appointment Model
-
-# \- Customer bookings
-
-# \- Fields: id, customerId, stylistId, serviceId, timeSlotId, status, notes, cancellationReason
-
-# 
-
-# \## Business Rules
-
-# 
-
-# \### Appointment Scheduling
-
-# \- Maximum 8 appointment slots per stylist per day
-
-# \- Each slot lasts exactly 1 hour
-
-# \- 1:1 ratio enforced (1 customer per stylist per slot)
-
-# \- Once booked, slot becomes unavailable
-
-# 
-
-# \### Booking System
-
-# \- Customers can only book available slots
-
-# \- Cannot book two stylists in the same time slot
-
-# \- Cancellation requires at least 2 hours notice
-
-# \- Admins manage master schedule
-
-# 
-
-# \## API Endpoints
-
-# 
-
-# \### Authentication
-
-# ```
-
-# POST   /api/v1/auth/register          - Register new customer
-
-# POST   /api/v1/auth/login             - User login
-
-# GET    /api/v1/auth/me                - Get current user profile
-
-# ```
-
-# 
-
-# \### Stylists (Admin only for create/update/delete)
-
-# ```
-
-# POST   /api/v1/stylists               - Create stylist (Admin)
-
-# GET    /api/v1/stylists               - Get all stylists (Public)
-
-# GET    /api/v1/stylists/:id           - Get stylist by ID (Public)
-
-# PATCH  /api/v1/stylists/:id           - Update stylist (Admin)
-
-# DELETE /api/v1/stylists/:id           - Delete stylist (Admin)
-
-# ```
-
-# 
-
-# \### Services (Admin only for create/update/delete)
-
-# ```
-
-# POST   /api/v1/services               - Create service (Admin)
-
-# GET    /api/v1/services               - Get all services (Public)
-
-# GET    /api/v1/services/:id           - Get service by ID (Public)
-
-# PATCH  /api/v1/services/:id           - Update service (Admin)
-
-# DELETE /api/v1/services/:id           - Delete service (Admin)
-
-# ```
-
-# 
-
-# \### Time Slots (Admin only for create/delete)
-
-# ```
-
-# POST   /api/v1/time-slots             - Create single slot (Admin)
-
-# POST   /api/v1/time-slots/bulk        - Create multiple slots (Admin)
-
-# GET    /api/v1/time-slots             - Get all slots (Public)
-
-# GET    /api/v1/time-slots/available   - Get available slots (Public)
-
-# DELETE /api/v1/time-slots/:id         - Delete slot (Admin)
-
-# ```
-
-# 
-
-# \### Appointments
-
-# ```
-
-# POST   /api/v1/appointments                    - Book appointment (Customer)
-
-# GET    /api/v1/appointments/my-appointments    - Get my appointments (Customer)
-
-# GET    /api/v1/appointments/stylist/:stylistId - Get stylist appointments (Stylist/Admin)
-
-# GET    /api/v1/appointments                    - Get all appointments (Admin)
-
-# GET    /api/v1/appointments/:id                - Get appointment by ID
-
-# PATCH  /api/v1/appointments/:id/cancel         - Cancel appointment (Customer/Admin)
-
-# PATCH  /api/v1/appointments/:id/status         - Update status (Admin)
-
-# ```
-
-# 
-
-# \## Admin Credentials
-
-# ```
-
-# Email: admin@salon.com
-
-# Password: Admin123
-
-# ```
-
-# 
-
-# \## Local Setup Instructions
-
-# 
-
-# \### Prerequisites
-
-# \- Node.js (v18 or higher)
-
-# \- MongoDB (local or Atlas)
-
-# \- npm or yarn
-
-# 
-
-# \### Installation Steps
-
-# 
-
-# 1\. \*\*Clone the repository\*\*
-
-# ```bash
-
-# git clone <repository-url>
-
-# cd salon-management-system
-
-# ```
-
-# 
-
-# 2\. \*\*Install dependencies\*\*
-
-# ```bash
-
-# npm install
-
-# ```
-
-# 
-
-# 3\. \*\*Configure environment variables\*\*
-
-# Create a `.env` file in the root directory:
-
-# ```env
-
-# NODE\_ENV=development
-
-# PORT=5000
-
-# DATABASE\_URL="mongodb://localhost:27017/salon\_db"
-
-# \# Or for MongoDB Atlas:
-
-# \# DATABASE\_URL="mongodb+srv://username:password@cluster.mongodb.net/salon\_db"
-
-# 
-
-# JWT\_SECRET=your\_super\_secret\_jwt\_key\_here
-
-# EXPIRES\_IN=7d
-
-# BCRYPT\_SALT\_ROUNDS=12
-
-# ```
-
-# 
-
-# 4\. \*\*Generate Prisma Client\*\*
-
-# ```bash
-
-# npx prisma generate
-
-# ```
-
-# 
-
-# 5\. \*\*Push schema to database\*\*
-
-# ```bash
-
-# npx prisma db push
-
-# ```
-
-# 
-
-# 6\. \*\*Start the server\*\*
-
-# ```bash
-
-# \# Development mode
-
-# npm run dev
-
-# 
-
-# \# Production mode
-
-# npm run build
-
-# npm start
-
-# ```
-
-# 
-
-# The server will start on `http://localhost:5000`
-
-# 
-
-# \## Testing Instructions
-
-# 
-
-# \### 1. Admin Login
-
-# ```bash
-
-# POST http://localhost:5000/api/v1/auth/login
-
-# Content-Type: application/json
-
-# 
-
-# {
-
-# &nbsp; "email": "admin@salon.com",
-
-# &nbsp; "password": "Admin123"
-
-# }
-
-# ```
-
-# \*\*Save the `accessToken` from response\*\*
-
-# 
-
-# \### 2. Create a Stylist (Admin)
-
-# ```bash
-
-# POST http://localhost:5000/api/v1/stylists
-
-# Authorization: <admin\_token>
-
-# Content-Type: application/json
-
-# 
-
-# {
-
-# &nbsp; "fullName": "Jane Smith",
-
-# &nbsp; "email": "jane@salon.com",
-
-# &nbsp; "password": "password123",
-
-# &nbsp; "phoneNumber": "+1234567891",
-
-# &nbsp; "bio": "Professional hairstylist with 5 years experience",
-
-# &nbsp; "specialization": \["Haircut", "Coloring", "Styling"],
-
-# &nbsp; "experience": 5
-
-# }
-
-# ```
-
-# 
-
-# \### 3. Create a Service (Admin)
-
-# ```bash
-
-# POST http://localhost:5000/api/v1/services
-
-# Authorization: <admin\_token>
-
-# Content-Type: application/json
-
-# 
-
-# {
-
-# &nbsp; "name": "Haircut",
-
-# &nbsp; "description": "Professional haircut service",
-
-# &nbsp; "price": 50,
-
-# &nbsp; "stylistId": "<stylist\_id\_from\_step\_2>"
-
-# }
-
-# ```
-
-# 
-
-# \### 4. Create Time Slots (Admin)
-
-# ```bash
-
-# POST http://localhost:5000/api/v1/time-slots/bulk
-
-# Authorization: <admin\_token>
-
-# Content-Type: application/json
-
-# 
-
-# {
-
-# &nbsp; "stylistId": "<stylist\_id>",
-
-# &nbsp; "date": "2026-01-25",
-
-# &nbsp; "slots": \[
-
-# &nbsp;   { "startTime": "09:00", "endTime": "10:00" },
-
-# &nbsp;   { "startTime": "10:00", "endTime": "11:00" },
-
-# &nbsp;   { "startTime": "11:00", "endTime": "12:00" },
-
-# &nbsp;   { "startTime": "14:00", "endTime": "15:00" }
-
-# &nbsp; ]
-
-# }
-
-# ```
-
-# 
-
-# \### 5. Register as Customer
-
-# ```bash
-
-# POST http://localhost:5000/api/v1/auth/register
-
-# Content-Type: application/json
-
-# 
-
-# {
-
-# &nbsp; "fullName": "John Doe",
-
-# &nbsp; "email": "john@example.com",
-
-# &nbsp; "password": "password123",
-
-# &nbsp; "phoneNumber": "+1234567892"
-
-# }
-
-# ```
-
-# 
-
-# \### 6. Customer Login
-
-# ```bash
-
-# POST http://localhost:5000/api/v1/auth/login
-
-# Content-Type: application/json
-
-# 
-
-# {
-
-# &nbsp; "email": "john@example.com",
-
-# &nbsp; "password": "password123"
-
-# }
-
-# ```
-
-# 
-
-# \### 7. Browse Available Services
-
-# ```bash
-
-# GET http://localhost:5000/api/v1/services
-
-# ```
-
-# 
-
-# \### 8. Check Available Slots
-
-# ```bash
-
-# GET http://localhost:5000/api/v1/time-slots/available?stylistId=<stylist\_id>\&date=2026-01-25
-
-# ```
-
-# 
-
-# \### 9. Book Appointment (Customer)
-
-# ```bash
-
-# POST http://localhost:5000/api/v1/appointments
-
-# Authorization: <customer\_token>
-
-# Content-Type: application/json
-
-# 
-
-# {
-
-# &nbsp; "stylistId": "<stylist\_id>",
-
-# &nbsp; "serviceId": "<service\_id>",
-
-# &nbsp; "timeSlotId": "<available\_slot\_id>",
-
-# &nbsp; "notes": "Please use organic products"
-
-# }
-
-# ```
-
-# 
-
-# \### 10. View My Appointments
-
-# ```bash
-
-# GET http://localhost:5000/api/v1/appointments/my-appointments
-
-# Authorization: <customer\_token>
-
-# ```
-
-# 
-
-# \### 11. Cancel Appointment (At least 2 hours before)
-
-# ```bash
-
-# PATCH http://localhost:5000/api/v1/appointments/<appointment\_id>/cancel
-
-# Authorization: <customer\_token>
-
-# Content-Type: application/json
-
-# 
-
-# {
-
-# &nbsp; "cancellationReason": "Schedule conflict"
-
-# }
-
-# ```
-
-# 
-
-# \## Error Handling Examples
-
-# 
-
-# \### Validation Error
-
-# ```json
-
-# {
-
-# &nbsp; "success": false,
-
-# &nbsp; "message": "Validation error occurred.",
-
-# &nbsp; "errorDetails": {
-
-# &nbsp;   "field": "email",
-
-# &nbsp;   "message": "Invalid email format"
-
-# &nbsp; }
-
-# }
-
-# ```
-
-# 
-
-# \### Unauthorized Access
-
-# ```json
-
-# {
-
-# &nbsp; "success": false,
-
-# &nbsp; "message": "Unauthorized access.",
-
-# &nbsp; "errorDetails": "You must be an admin to manage stylist profiles."
-
-# }
-
-# ```
-
-# 
-
-# \### Slot Already Booked
-
-# ```json
-
-# {
-
-# &nbsp; "success": false,
-
-# &nbsp; "message": "The selected time slot is already booked for this stylist."
-
-# }
-
-# ```
-
-# 
-
-# \### Daily Limit Reached
-
-# ```json
-
-# {
-
-# &nbsp; "success": false,
-
-# &nbsp; "message": "Daily limit reached: Maximum 8 slots per stylist per day"
-
-# }
-
-# ```
-
-# 
-
-# \## Deployment
-
-# 
-
-# \### Vercel Deployment
-
-# 1\. Install Vercel CLI: `npm i -g vercel`
-
-# 2\. Login: `vercel login`
-
-# 3\. Deploy: `vercel --prod`
-
-# 
-
-# \### Heroku Deployment
-
-# 1\. Create Heroku app: `heroku create salon-app`
-
-# 2\. Set environment variables: `heroku config:set DATABASE\_URL=...`
-
-# 3\. Deploy: `git push heroku main`
-
-# 
-
-# \### Railway Deployment
-
-# 1\. Connect GitHub repository
-
-# 2\. Add environment variables in Railway dashboard
-
-# 3\. Deploy automatically on push
-
-# 
-
-# \## Project Structure
-
-# ```
-
-# salon-management-system/
-
-# ├── prisma/
-
-# │   └── schema.prisma
-
-# ├── src/
-
-# │   ├── app/
-
-# │   │   ├── db/
-
-# │   │   ├── middlewares/
-
-# │   │   ├── modules/
-
-# │   │   │   ├── Auth/
-
-# │   │   │   ├── Stylist/
-
-# │   │   │   ├── Service/
-
-# │   │   │   ├── TimeSlot/
-
-# │   │   │   └── Appointment/
-
-# │   │   └── routes/
-
-# │   ├── config/
-
-# │   ├── errors/
-
-# │   ├── helpers/
-
-# │   ├── interfaces/
-
-# │   └── shared/
-
-# ├── .env
-
-# ├── .gitignore
-
-# ├── package.json
-
-# ├── tsconfig.json
-
-# └── README.md
-
-# ```
-
-# 
-
-# \## Features Implemented
-
-# ✅ JWT-based authentication
-
-# ✅ Role-based access control (Admin, Stylist, Customer)
-
-# ✅ Stylist profile management
-
-# ✅ Service category management
-
-# ✅ Time slot scheduling (max 8 per day)
-
-# ✅ Appointment booking with conflict prevention
-
-# ✅ 2-hour cancellation policy
-
-# ✅ Comprehensive error handling
-
-# ✅ Prisma ORM with MongoDB
-
-# ✅ Modular architecture
-
-# 
-
-# \## License
-
-# MIT
-
-# 
-
-# \## Contributors
-
-# \[Your Name]
-
-# 
-
-# \## Support
-
-# For issues and questions, please create an issue in the GitHub repository.
-
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `DATABASE_URL` | MongoDB connection string | ✅ Yes |
+| `JWT_SECRET` | Secret key for JWT signing | ✅ Yes |
+| `BCRYPT_SALT_ROUNDS` | Rounds for password hashing | ✅ Yes |
+| `PORT` | Server port number | ❌ No (default: 5050) |
+| `NODE_ENV` | Environment mode | ❌ No (default: development) |
+
+---
+
+## 📚 API Documentation
+
+### Base URL
+
+**Local**: `http://localhost:5050/api/v1`  
+**Production**: `https://saloonappointment-production.up.railway.app/api/v1`
+
+### Authentication
+
+All protected routes require a JWT token in the Authorization header:
+
+```
+Authorization: Bearer <your-jwt-token>
+```
+
+---
+
+### 🔐 Authentication Endpoints
+
+#### Register Customer
+```http
+POST /auth/register
+```
+
+**Request Body:**
+```json
+{
+  "fullName": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "phoneNumber": "+1234567890"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "statusCode": 201,
+  "message": "User registered successfully",
+  "data": {
+    "user": {
+      "id": "...",
+      "fullName": "John Doe",
+      "email": "john@example.com",
+      "role": "CUSTOMER"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+#### Login
+```http
+POST /auth/login
+```
+
+**Request Body:**
+```json
+{
+  "email": "admin@salon.com",
+  "password": "admin123"
+}
+```
+
+#### Get Profile
+```http
+GET /auth/me
+Authorization: Bearer <token>
+```
+
+---
+
+### 👥 Stylist Endpoints
+
+#### Create Stylist (Admin Only)
+```http
+POST /stylists
+Authorization: Bearer <admin-token>
+```
+
+**Request Body:**
+```json
+{
+  "fullName": "Emily Davis",
+  "email": "emily@salon.com",
+  "password": "stylist123",
+  "phoneNumber": "+1234567890",
+  "bio": "Expert hair stylist with 10 years experience",
+  "specialization": ["Haircut", "Coloring", "Styling"],
+  "experience": 10
+}
+```
+
+#### Get All Stylists
+```http
+GET /stylists
+GET /stylists?isAvailable=true
+GET /stylists?searchTerm=emily
+```
+
+#### Get Stylist by ID
+```http
+GET /stylists/:id
+```
+
+#### Update Stylist (Admin Only)
+```http
+PATCH /stylists/:id
+Authorization: Bearer <admin-token>
+```
+
+#### Delete Stylist (Admin Only)
+```http
+DELETE /stylists/:id
+Authorization: Bearer <admin-token>
+```
+
+---
+
+### 💼 Service Endpoints
+
+#### Create Service (Admin Only)
+```http
+POST /services
+Authorization: Bearer <admin-token>
+```
+
+**Request Body:**
+```json
+{
+  "name": "Premium Haircut",
+  "description": "Professional haircut with styling",
+  "price": 65.00,
+  "stylistId": "stylist-id-here"
+}
+```
+
+#### Get All Services
+```http
+GET /services
+GET /services?stylistId=xxx
+GET /services?isActive=true
+```
+
+#### Get Service by ID
+```http
+GET /services/:id
+```
+
+#### Update Service (Admin Only)
+```http
+PATCH /services/:id
+Authorization: Bearer <admin-token>
+```
+
+#### Delete Service (Admin Only)
+```http
+DELETE /services/:id
+Authorization: Bearer <admin-token>
+```
+
+---
+
+### ⏰ Time Slot Endpoints
+
+#### Create Single Slot (Admin Only)
+```http
+POST /time-slots
+Authorization: Bearer <admin-token>
+```
+
+**Request Body:**
+```json
+{
+  "stylistId": "stylist-id",
+  "date": "2026-01-30",
+  "startTime": "09:00",
+  "endTime": "10:00"
+}
+```
+
+#### Create Multiple Slots (Admin Only)
+```http
+POST /time-slots/bulk
+Authorization: Bearer <admin-token>
+```
+
+**Request Body:**
+```json
+{
+  "stylistId": "stylist-id",
+  "date": "2026-01-30",
+  "slots": [
+    { "startTime": "09:00", "endTime": "10:00" },
+    { "startTime": "10:00", "endTime": "11:00" },
+    { "startTime": "14:00", "endTime": "15:00" }
+  ]
+}
+```
+
+#### Get Available Slots
+```http
+GET /time-slots/available?stylistId=xxx&date=2026-01-30
+```
+
+#### Get All Time Slots
+```http
+GET /time-slots
+GET /time-slots?stylistId=xxx&date=2026-01-30&isBooked=false
+```
+
+#### Delete Time Slot (Admin Only)
+```http
+DELETE /time-slots/:id
+Authorization: Bearer <admin-token>
+```
+
+---
+
+### 📅 Appointment Endpoints
+
+#### Book Appointment (Customer Only)
+```http
+POST /appointments
+Authorization: Bearer <customer-token>
+```
+
+**Request Body:**
+```json
+{
+  "stylistId": "stylist-id",
+  "serviceId": "service-id",
+  "timeSlotId": "slot-id",
+  "notes": "Please use organic products"
+}
+```
+
+**Success Response:**
+```json
+{
+  "success": true,
+  "statusCode": 201,
+  "message": "Appointment booked successfully",
+  "data": {
+    "id": "...",
+    "customer": {
+      "fullName": "John Doe",
+      "email": "john@example.com"
+    },
+    "stylist": {
+      "user": {
+        "fullName": "Emily Davis"
+      }
+    },
+    "service": {
+      "name": "Premium Haircut",
+      "price": 65
+    },
+    "timeSlot": {
+      "date": "2026-01-30T00:00:00.000Z",
+      "startTime": "09:00"
+    },
+    "status": "PENDING"
+  }
+}
+```
+
+#### Get My Appointments (Customer)
+```http
+GET /appointments/my-appointments
+GET /appointments/my-appointments?status=PENDING
+Authorization: Bearer <customer-token>
+```
+
+#### Get Stylist Appointments (Stylist/Admin)
+```http
+GET /appointments/stylist/:stylistId
+GET /appointments/stylist/:stylistId?date=2026-01-30
+Authorization: Bearer <stylist-token>
+```
+
+#### Get All Appointments (Admin Only)
+```http
+GET /appointments
+GET /appointments?status=CONFIRMED&date=2026-01-30
+Authorization: Bearer <admin-token>
+```
+
+#### Get Appointment by ID
+```http
+GET /appointments/:id
+Authorization: Bearer <token>
+```
+
+#### Cancel Appointment
+```http
+PATCH /appointments/:id/cancel
+Authorization: Bearer <customer-token>
+```
+
+**Request Body:**
+```json
+{
+  "cancellationReason": "Schedule conflict"
+}
+```
+
+#### Update Appointment Status (Admin Only)
+```http
+PATCH /appointments/:id/status
+Authorization: Bearer <admin-token>
+```
+
+**Request Body:**
+```json
+{
+  "status": "CONFIRMED"
+}
+```
+
+**Valid Statuses:** `PENDING`, `CONFIRMED`, `COMPLETED`, `CANCELLED`
+
+---
+
+## 🧪 Testing Guide
+
+Follow this step-by-step guide to test the complete booking flow:
+
+### Step 1: Admin Login
+
+```bash
+curl -X POST https://saloonappointment-production.up.railway.app/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "admin@salon.com",
+    "password": "admin123"
+  }'
+```
+
+**📋 Save the `accessToken` from the response**
+
+### Step 2: Create a Stylist (Admin)
+
+```bash
+curl -X POST https://saloonappointment-production.up.railway.app/api/v1/stylists \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <admin-token>" \
+  -d '{
+    "fullName": "Emily Davis",
+    "email": "emily@salon.com",
+    "password": "stylist123",
+    "phoneNumber": "+1234567890",
+    "bio": "Expert hair stylist",
+    "specialization": ["Haircut", "Coloring"],
+    "experience": 10
+  }'
+```
+
+**📋 Save the stylist `id`**
+
+### Step 3: Create a Service (Admin)
+
+```bash
+curl -X POST https://saloonappointment-production.up.railway.app/api/v1/services \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <admin-token>" \
+  -d '{
+    "name": "Premium Haircut",
+    "description": "Professional haircut with styling",
+    "price": 65.00,
+    "stylistId": "<stylist-id>"
+  }'
+```
+
+**📋 Save the service `id`**
+
+### Step 4: Create Time Slots (Admin)
+
+```bash
+curl -X POST https://saloonappointment-production.up.railway.app/api/v1/time-slots/bulk \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <admin-token>" \
+  -d '{
+    "stylistId": "<stylist-id>",
+    "date": "2026-01-30",
+    "slots": [
+      { "startTime": "09:00", "endTime": "10:00" },
+      { "startTime": "10:00", "endTime": "11:00" },
+      { "startTime": "14:00", "endTime": "15:00" }
+    ]
+  }'
+```
+
+**📋 Save a `timeSlotId`**
+
+### Step 5: Register as Customer
+
+```bash
+curl -X POST https://saloonappointment-production.up.railway.app/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullName": "Sarah Johnson",
+    "email": "sarah@example.com",
+    "password": "customer123",
+    "phoneNumber": "+1987654321"
+  }'
+```
+
+**📋 Save the customer `accessToken`**
+
+### Step 6: Browse Services
+
+```bash
+curl https://saloonappointment-production.up.railway.app/api/v1/services
+```
+
+### Step 7: Check Available Slots
+
+```bash
+curl "https://saloonappointment-production.up.railway.app/api/v1/time-slots/available?stylistId=<stylist-id>&date=2026-01-30"
+```
+
+### Step 8: Book Appointment (Customer)
+
+```bash
+curl -X POST https://saloonappointment-production.up.railway.app/api/v1/appointments \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <customer-token>" \
+  -d '{
+    "stylistId": "<stylist-id>",
+    "serviceId": "<service-id>",
+    "timeSlotId": "<slot-id>",
+    "notes": "First time customer"
+  }'
+```
+
+### Step 9: View My Appointments
+
+```bash
+curl https://saloonappointment-production.up.railway.app/api/v1/appointments/my-appointments \
+  -H "Authorization: Bearer <customer-token>"
+```
+
+### Step 10: Cancel Appointment
+
+```bash
+curl -X PATCH https://saloonappointment-production.up.railway.app/api/v1/appointments/<appointment-id>/cancel \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <customer-token>" \
+  -d '{
+    "cancellationReason": "Schedule conflict"
+  }'
+```
+
+---
+
+## 📜 Business Rules
+
+### Appointment Scheduling
+- ✅ Maximum **8 slots per stylist per day**
+- ✅ Each slot lasts exactly **1 hour**
+- ✅ **1:1 ratio** enforced (1 customer per stylist per slot)
+- ✅ Once booked, slot becomes **unavailable**
+- ✅ Admin manages the master schedule
+
+### Booking System
+- ✅ Customers can only book **available slots**
+- ✅ Cannot book **two stylists** in the same time slot
+- ✅ Cancellation requires **at least 2 hours** notice
+- ✅ Automatic slot validation and conflict prevention
+
+### Error Handling
+
+**Validation Error:**
+```json
+{
+  "success": false,
+  "message": "Validation Error",
+  "errorSources": [
+    {
+      "path": "body.email",
+      "message": "Invalid email format"
+    }
+  ]
+}
+```
+
+**Unauthorized Access:**
+```json
+{
+  "success": false,
+  "message": "Forbidden!",
+  "errorSources": [
+    {
+      "type": "ApiError",
+      "details": "Forbidden!"
+    }
+  ]
+}
+```
+
+**Slot Already Booked:**
+```json
+{
+  "success": false,
+  "message": "The selected time slot is already booked for this stylist"
+}
+```
+
+**Daily Limit Reached:**
+```json
+{
+  "success": false,
+  "message": "Daily limit reached: Maximum 8 slots per stylist per day"
+}
+```
+
+---
+
+## 🔑 Admin Credentials
+
+For testing and demonstration purposes:
+
+```
+Email: admin@salon.com
+Password: admin123
+```
+
+> ⚠️ **Important:** Change these credentials in production!
+
+---
+
+## 🌐 Live API
+
+**Production URL:** `https://saloonappointment-production.up.railway.app`
+
+**API Base URL:** `https://saloonappointment-production.up.railway.app/api/v1`
+
+**Health Check:** [https://saloonappointment-production.up.railway.app](https://saloonappointment-production.up.railway.app)
+
+**Status:** ✅ Live and Running
+
+---
+
+## 📁 Project Structure
+
+```
+salon-management-system/
+├── prisma/
+│   └── schema.prisma          # Database schema
+├── src/
+│   ├── app/
+│   │   ├── db/
+│   │   │   └── db.ts         # Database initialization
+│   │   ├── middlewares/
+│   │   │   ├── auth.ts       # Authentication middleware
+│   │   │   ├── globalErrorHandler.ts
+│   │   │   └── validateRequest.ts
+│   │   ├── modules/
+│   │   │   ├── Auth/         # Authentication module
+│   │   │   ├── Stylist/      # Stylist management
+│   │   │   ├── Service/      # Service management
+│   │   │   ├── TimeSlot/     # Time slot scheduling
+│   │   │   └── Appointment/  # Appointment booking
+│   │   └── routes/
+│   │       └── index.ts      # Route aggregation
+│   ├── config/
+│   │   └── index.ts          # Configuration
+│   ├── errors/
+│   │   ├── ApiErrors.ts      # Custom error classes
+│   │   └── handleZodError.ts # Zod error handler
+│   ├── helpers/
+│   │   └── jwtHelpers.ts     # JWT utilities
+│   ├── interfaces/
+│   │   └── index.d.ts        # TypeScript interfaces
+│   ├── shared/
+│   │   ├── catchAsync.ts     # Async error wrapper
+│   │   ├── prisma.ts         # Prisma client
+│   │   └── sendResponse.ts   # Response formatter
+│   ├── app.ts                # Express app setup
+│   └── server.ts             # Server entry point
+├── .env                       # Environment variables
+├── .gitignore
+├── package.json
+├── tsconfig.json
+├── ERD.png                    # Entity Relationship Diagram
+└── README.md
+```
+
+---
+
+## 🚀 Deployment
+
+### Railway (Current Deployment)
+
+The application is currently deployed on [Railway](https://railway.app).
+
+**Steps to deploy:**
+1. Connect GitHub repository to Railway
+2. Add environment variables
+3. Railway auto-detects Node.js and builds automatically
+4. Access via provided Railway domain
+
+### Other Platforms
+
+<details>
+<summary><b>Vercel Deployment</b></summary>
+
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
+```
+</details>
+
+<details>
+<summary><b>Render Deployment</b></summary>
+
+1. Connect GitHub repository
+2. Set build command: `npm run build`
+3. Set start command: `npm start`
+4. Add environment variables
+5. Deploy
+</details>
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Your Name**
+
+- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
+- Email: your.email@example.com
+
+---
+
+## 🙏 Acknowledgments
+
+- [Express.js](https://expressjs.com/) - Fast, unopinionated web framework
+- [Prisma](https://www.prisma.io/) - Next-generation ORM
+- [MongoDB](https://www.mongodb.com/) - NoSQL database
+- [Railway](https://railway.app/) - Deployment platform
+
+---
+
+<div align="center">
+
+**⭐ Star this repository if you find it helpful!**
+
+Made with ❤️ and TypeScript
+
+[⬆ Back to Top](#-salon-appointment--service-management-system)
+
+</div>
