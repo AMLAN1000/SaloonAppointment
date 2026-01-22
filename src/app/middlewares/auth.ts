@@ -27,7 +27,7 @@ const auth = (...roles: string[]) => {
 
       const { userId, role } = verifiedUser;
 
-      // 🔎 Check user in DB
+      //Check user in DB
       const user = await prisma.user.findUnique({
         where: { id: userId },
       });
@@ -74,7 +74,7 @@ const auth = (...roles: string[]) => {
         role: verifiedUser.role,
       };
 
-      // ✅ Role-based access
+      // Role-based access
       if (roles.length && !roles.includes(role)) {
         throw new ApiError(httpStatus.FORBIDDEN, "Forbidden!");
       }

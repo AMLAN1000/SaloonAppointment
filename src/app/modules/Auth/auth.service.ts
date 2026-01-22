@@ -34,7 +34,7 @@ const register = async (payload: any) => {
       phoneNumber: phoneNumber || null,
       role: UserRole.CUSTOMER,
       status: UserStatus.ACTIVE,
-      emailVerified: true, // For simplicity, we're setting this to true
+      emailVerified: true,
     },
     select: {
       id: true,

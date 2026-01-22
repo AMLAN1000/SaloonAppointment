@@ -1,4 +1,3 @@
-// This is your Prisma schema file for MongoDB
 generator client {
   provider = "prisma-client-js"
 }
@@ -28,7 +27,6 @@ enum AppointmentStatus {
   CANCELLED
 }
 
-// User Model - Handles all three roles
 model User {
   id             String     @id @default(auto()) @map("_id") @db.ObjectId
   fullName       String
@@ -53,7 +51,6 @@ model User {
   @@map("users")
 }
 
-// Stylist Model - Extended profile for stylists
 model Stylist {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @unique @db.ObjectId
@@ -76,7 +73,6 @@ model Stylist {
   @@map("stylists")
 }
 
-// Service Category Model
 model Service {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   name        String // e.g., "Haircut", "Facial", "Manicure"
@@ -97,7 +93,6 @@ model Service {
   @@map("services")
 }
 
-// Time Slot Model - Admin creates these (max 8 per day per stylist)
 model TimeSlot {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   stylistId String  @db.ObjectId
@@ -118,7 +113,6 @@ model TimeSlot {
   @@map("time_slots")
 }
 
-// Appointment Model - Customer bookings
 model Appointment {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -144,13 +138,13 @@ model Appointment {
   @@map("appointments")
 }
 
-// Notification Model (optional but useful)
+// Ill add it later for my project
 model Notification {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
   userId  String  @db.ObjectId
   title   String
   message String
-  type    String // "appointment", "cancellation", "reminder"
+  type    String
   isRead  Boolean @default(false)
 
   createdAt DateTime @default(now())
