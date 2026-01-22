@@ -190,14 +190,6 @@ Password: Admin123
 - **TimeSlot**: Available appointment slots (max 8/day per stylist)
 - **Appointment**: Customer bookings with status tracking
 
-### Relationships
-
-- `User ↔ Stylist`: One-to-One (when role is STYLIST)
-- `User ↔ Appointment`: One-to-Many (customers)
-- `Stylist ↔ Service`: One-to-Many
-- `Stylist ↔ TimeSlot`: One-to-Many
-- `TimeSlot ↔ Appointment`: One-to-One (prevents double booking)
-
 ---
 
 ##  Getting Started
