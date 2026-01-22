@@ -5,8 +5,12 @@ import app from "./app";
 let server: Server;
 
 async function startServer() {
-  server = app.listen(config.port, () => {
-    console.log("✅ Server is listening on port", config.port);
+  // Railway provides PORT via environment variable
+  const port = process.env.PORT || config.port || 5050;
+
+  server = app.listen(port, () => {
+    console.log("✅ Server is listening on port", port);
+    console.log("🌍 Environment:", process.env.NODE_ENV || "development");
   });
 }
 
