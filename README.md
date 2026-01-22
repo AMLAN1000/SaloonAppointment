@@ -99,6 +99,89 @@ Password: Admin123
 
 ![ERD Diagram](erd.png)
 
+##  Database Schema 
+
+### 👤 User Model
+```typescript
+{
+  id: string;
+  fullName: string;
+  email: string;
+  password: string;
+  phoneNumber?: string;
+  role: 'ADMIN' | 'STYLIST' | 'CUSTOMER';
+  status: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' | 'SUSPENDED';
+  emailVerified: boolean;
+  isDeleted: boolean;
+  profileImage?: string;
+  lastLoginAt?: Date;
+  suspendedUntil?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### Stylist Model
+```typescript
+{
+  id: string;
+  userId: string;
+  bio?: string;
+  specialization: string[];
+  experience?: number;
+  rating: number;
+  isAvailable: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### Service Model
+```typescript
+{
+  id: string;
+  name: string;
+  description?: string;
+  duration: number;
+  price: number;
+  image?: string;
+  isActive: boolean;
+  stylistId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### TimeSlot Model
+```typescript
+{
+  id: string;
+  stylistId: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
+  isBooked: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### Appointment Model
+```typescript
+{
+  id: string;
+  customerId: string;
+  stylistId: string;
+  serviceId: string;
+  timeSlotId: string;
+  status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
+  notes?: string;
+  cancellationReason?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
 ### Database Models
 
 - **User**: Manages all user roles (Admin, Stylist, Customer)
