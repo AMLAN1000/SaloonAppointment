@@ -73,7 +73,7 @@ The **Salon Appointment & Service Management System** is a robust backend API de
 
 ##  Entity Relationship Diagram
 
-![ERD Diagram](ERD.png)
+![ERD Diagram](erd.png)
 
 ### Database Models
 
