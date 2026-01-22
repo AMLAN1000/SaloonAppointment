@@ -21,6 +21,30 @@
 
 The **Salon Appointment & Service Management System** is a robust backend API designed to streamline salon operations. Built with **TypeScript**, **Express.js**, and **MongoDB**, it provides a complete solution for managing appointments, stylists, services, and customer bookings with enforced business rules and comprehensive error handling.
 
+## Admin Credentials
+
+For testing and demonstration purposes:
+
+```
+Email: admin@salon.com
+Password: Admin123
+```
+
+
+---
+
+## 🌐 Live API
+
+**Production URL:** `https://saloonappointment-production.up.railway.app`
+
+**API Base URL:** `https://saloonappointment-production.up.railway.app/api/v1`
+
+**Health Check:** [https://saloonappointment-production.up.railway.app](https://saloonappointment-production.up.railway.app)
+
+**Status:**  Live and Running
+
+---
+
 ### Key Highlights
 
 - **Role-Based Access Control**: Admin, Stylist, and Customer roles with specific permissions
@@ -728,29 +752,7 @@ curl -X PATCH https://saloonappointment-production.up.railway.app/api/v1/appoint
 
 ---
 
-## Admin Credentials
 
-For testing and demonstration purposes:
-
-```
-Email: admin@salon.com
-Password: Admin123
-```
-
-
----
-
-## 🌐 Live API
-
-**Production URL:** `https://saloonappointment-production.up.railway.app`
-
-**API Base URL:** `https://saloonappointment-production.up.railway.app/api/v1`
-
-**Health Check:** [https://saloonappointment-production.up.railway.app](https://saloonappointment-production.up.railway.app)
-
-**Status:**  Live and Running
-
----
 
 ## 📁 Project Structure
 
